@@ -8,6 +8,7 @@ const client = tumblr.createClient({
   token: 'fZlJjjUEt7UmZ3VqtB5SJxTsQ1xK238H0MQEdQDu6ZzSioOlnV',
   token_secret: 'p0rs2YrN7txFuQQ4A2dxPRrH8nsdds1nQ3pl51UGdeLxBUYG0y'
 });
+const blogToPost = 'hi3-updates';
 const tumblrTags = ["hi3 updates", "honkai impact 3rd updates", "hi3", "honkai impact 3rd"];
 
 // url of RSS feed set to .JSON file
@@ -148,5 +149,5 @@ function postToTumblr(tweet){
 }
 
 checkForTweet();
-// Checks for updates every 60 seconds after launch
-setInterval(checkForTweet, 60000);
+// Checks for updates every 10 seconds after launch
+setInterval(checkForTweet, 10000);
