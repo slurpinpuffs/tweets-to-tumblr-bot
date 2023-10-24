@@ -1,6 +1,7 @@
-//Tumblr side:
-// Authenticate via OAuth
 const tumblr = require('tumblr.js');
+const fs = require('fs');
+const https = require('https');
+// Authenticate Tumblr acc via OAuth
 const client = tumblr.createClient({
   consumer_key: '0SFWclyhmVGgXZbPqRmhYicSaaCldaImLWGKM2o7b5HJZtpAi6',
   consumer_secret: 'kyyHDFqFcCd3wmRsatSpD2CrdHy2aGifeENFnivChMCn3E8gLp',
@@ -9,10 +10,8 @@ const client = tumblr.createClient({
 });
 const tumblrTags = ["hi3 updates", "honkai impact 3rd updates", "hi3", "honkai impact 3rd"];
 
-const https = require('https');
 // url of RSS feed set to .JSON file
 let url = "https://rss.app/feeds/v1.1/GxXVByw2nO2W0FL7.json";
-const fs = require('fs');
 
 let latestTweet;
 let lastUpdateLocation = __dirname + '/last_update.txt';
@@ -149,3 +148,5 @@ function postToTumblr(tweet){
 }
 
 checkForTweet();
+// Checks for updates every 60 seconds after launch
+setInterval(checkForTweet, 60000);
