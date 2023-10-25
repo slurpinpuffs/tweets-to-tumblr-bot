@@ -3,19 +3,23 @@ const fs = require('fs');
 const https = require('https');
 // Authenticate Tumblr acc via OAuth
 const client = tumblr.createClient({
-  consumer_key: '0SFWclyhmVGgXZbPqRmhYicSaaCldaImLWGKM2o7b5HJZtpAi6',
-  consumer_secret: 'kyyHDFqFcCd3wmRsatSpD2CrdHy2aGifeENFnivChMCn3E8gLp',
-  token: 'fZlJjjUEt7UmZ3VqtB5SJxTsQ1xK238H0MQEdQDu6ZzSioOlnV',
-  token_secret: 'p0rs2YrN7txFuQQ4A2dxPRrH8nsdds1nQ3pl51UGdeLxBUYG0y'
+  consumer_key: '',
+  consumer_secret: '',
+  token: '',
+  token_secret: ''
 });
-const blogToPost = 'hi3-updates';
-const tumblrTags = ["hi3 updates", "honkai impact 3rd updates", "hi3", "honkai impact 3rd"];
+const blogToPost = 'example-blog-name';
+const tumblrTags = ["list", "tags", "here"];
 
 // url of RSS feed set to .JSON file
-let url = "https://rss.app/feeds/v1.1/GxXVByw2nO2W0FL7.json";
+let url = "https://rss.app/feeds/v1.1/example.json";
 
 let latestTweet;
 let lastUpdateLocation = __dirname + '/last_update.txt';
+let date = new Date()
+
+// Used to delete the name when posting tweet
+let twitterHandle = '@HonkaiImpact3rd';
 
 async function getBlogInfo(blogName){
   // Make the request
@@ -93,11 +97,11 @@ async function checkForTweet(){
       try{
         json = JSON.parse(body);
         latestTweet = json.items[0];
-        console.log(latestTweet.title);
 
         fs.readFile(lastUpdateLocation, (err, data) => {
           if(err) throw err;
           if(data == latestTweet.url){
+            console.log(`${new Date().toString()}:`);
             console.log("Tweet already posted!");
           }else{
             postToTumblr(latestTweet);
@@ -113,8 +117,8 @@ async function checkForTweet(){
 };
 
 function postToTumblr(tweet){
-  // Deletes '@HonkaiImpact3rd' from tweet content
-  let tweetText = tweet.title.substring(18);
+  // Deletes Twitter handle from tweet content
+  let tweetText = tweet.title.substring(twitterHandle.length + 2);
 
   // Checks for image
   if(tweet.image != null){
@@ -128,7 +132,7 @@ function postToTumblr(tweet){
 
       file.on('finish', () => {
         file.close();
-        createTextPostWithImage('hi3-updates', tweetText, tweet.url, savedImagePath);
+        createTextPostWithImage(blogToPost, tweetText, tweet.url, savedImagePath);
       });
     }).on('error', err => {
       fs.unlink(imageName);
@@ -136,8 +140,12 @@ function postToTumblr(tweet){
     });
   }else{
     // Posts to Tumblr without image
-    createTextPost('hi3-updates', tweetText, tweet.url);
+    createTextPost(blogToPost, tweetText, tweet.url);
   }
+
+  // Logs post to console
+  console.log(`${new Date().toString()}:`);
+  console.log(`Posted:\n${tweetText}`);
 
   // Saves link of input tweet to file
   fs.writeFile(lastUpdateLocation, tweet.url, function(err) {
