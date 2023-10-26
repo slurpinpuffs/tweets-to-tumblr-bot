@@ -1,31 +1,28 @@
 const tumblr = require('tumblr.js');
 const fs = require('fs');
 const https = require('https');
-// Authenticate Tumblr acc via OAuth
+// CHANGE THIS: Authenticate Tumblr acc via OAuth, enter your Tumblr API credentials
 const client = tumblr.createClient({
   consumer_key: '',
   consumer_secret: '',
   token: '',
   token_secret: ''
 });
+// CHANGE THIS: Name of the blog you own that you want the bot to post to
 const blogToPost = 'example-blog-name';
-const tumblrTags = ["list", "tags", "here"];
+// CHANGE THIS: These tags will be posted with each Tumblr post created
+const tumblrTags = ["tags", "like", "this"];
 
-// url of RSS feed set to .JSON file
-let url = "https://rss.app/feeds/v1.1/example.json";
+// CHANGE THIS: URL of an RSS feed set to .JSON file, example below
+// Have the RSS feed contain one Twitter account's feed via https://rss.app/rss-feed/create-twitter-rss-feed
+let url = "https://rss.app/feeds/v1.1/GxXVByw2nO2W0FL7.json";
+
+// CHANGE THIS: Twitter handle of Twitter account, used to delete the name when posting tweet
+let twitterHandle = '@HonkaiImpact3rd';
 
 let latestTweet;
 let lastUpdateLocation = __dirname + '/last_update.txt';
 let date = new Date()
-
-// Used to delete the name when posting tweet
-let twitterHandle = '@HonkaiImpact3rd';
-
-async function getBlogInfo(blogName){
-  // Make the request
-  var response = await client.blogInfo(blogName);
-  return response;
-}
 
 async function createTextPost(blogName, text, sourceUrl){
   await client.createPost(blogName, {
@@ -152,7 +149,7 @@ function postToTumblr(tweet){
     if(err){
       return console.log(err);
     }
-    console.log("File saved!");
+    console.log("Last Tweet updated!");
   });
 }
 
