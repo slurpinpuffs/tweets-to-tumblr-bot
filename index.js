@@ -22,7 +22,7 @@ let twitterHandle = '@HonkaiImpact3rd';
 
 let latestTweet;
 let lastUpdateLocation = __dirname + '/last_update.txt';
-let date = new Date()
+let millisecondsToWait = 10000;
 
 async function createTextPost(blogName, text, sourceUrl){
   await client.createPost(blogName, {
@@ -155,4 +155,4 @@ function postToTumblr(tweet){
 
 checkForTweet();
 // Checks for updates every 10 seconds after launch
-setInterval(checkForTweet, 10000);
+setInterval(checkForTweet, millisecondsToWait);
